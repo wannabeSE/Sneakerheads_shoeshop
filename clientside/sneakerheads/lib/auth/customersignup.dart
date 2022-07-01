@@ -1,34 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 class CustomerSignUp extends StatefulWidget {
   const CustomerSignUp({ Key? key }) : super(key: key);
 
   @override
   State<CustomerSignUp> createState() => _CustomerSignUpState();
 }
-final _formkey2= GlobalKey<FormState>();
+final GlobalKey <FormState> _formkey2= GlobalKey<FormState>();
 
 String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmpassController =  TextEditingController();
-final TextEditingController firstname =  TextEditingController();
-final TextEditingController lastname =  TextEditingController();
+final TextEditingController firstnameController =  TextEditingController();
+final TextEditingController lastnameController =  TextEditingController();
 final TextEditingController emailController = TextEditingController();
 
 RegExp regExp =RegExp(p);
 String temp='';
 bool observeText=true;
 class _CustomerSignUpState extends State<CustomerSignUp> {
-  // void signUp()async{
-  //   String url='localhost:8080/api/signup'; 
-  //   SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-
-  //   Map body={'firstName':firstname,'lastName':lastname,'email':emailController,'password':passwordController};
-  //   var jsonresponse;
-  //   var res= await http.post(url,);
-  // }
+  void signUp(String fname, String lname, String email, String password)async{
+    
+     
+      var res= await http.post(Uri.parse('http://10.0.2.2:8080/api/signup'),
+      headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String,String>{
+        'firstName':fname,
+        'lastName':lname,
+        'email':email,
+        'password':password,
+      }        
+      )
+    
+      );
+      
+     
+      print(res.body);
+      
+    
+  }
   @override
    Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +66,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
             Padding(
               padding: const EdgeInsets.all(7),
               child: TextFormField(
+                controller: firstnameController,
                 validator: ((value) {
                   if(value!.isEmpty){
                     return 'Please Enter First Name';
@@ -63,12 +80,13 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
                     borderSide:const BorderSide(color: Colors.black87)
                   ),
                   labelText: 'firstname',
-                ),           
+                ),
               ),
             ),
              Padding(
               padding: const EdgeInsets.all(6),
               child: TextFormField(
+                controller: lastnameController,
                 validator: ((value) {
                   if(value!.isEmpty){
                     return 'Please Enter Last Name';
@@ -82,7 +100,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
                     borderSide:const BorderSide(color: Colors.black87)
                   ),
                   labelText: 'lastname',
-                ),           
+                ),
               ),
             ),
              Padding(
@@ -115,7 +133,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
               validator: ((value) {
                 if(value!.isEmpty){
                   return 'Please enter a password';
-                }else if(value.length<8){
+                }else if(value.length<6){
                   return 'The password is too short';
                 }else{
                   temp=value;
@@ -183,11 +201,13 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
                     height: 20,
                   ),
                   ElevatedButton(
-                      onPressed: () {
-                        if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty)
+                      onPressed: ()async {
+                        if(firstnameController.text.isNotEmpty && lastnameController.text.isNotEmpty && emailController.text.isNotEmpty && passwordController.text.isNotEmpty)
                         {
                           // validation(emailController.text,passwordController.text);
-                          
+                          signUp(firstnameController.text, lastnameController.text, emailController.text, passwordController.text);
+                        }else{
+                          print('empty');
                         }
                         
                       },

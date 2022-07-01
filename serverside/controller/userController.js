@@ -11,9 +11,7 @@ exports.createUser=err(async(req,res,next)=>{
     })
     const token=user.getJwtToken()
     res.status(201).json({
-        success:true,
-        user,
-        token,
+        message:'account created'
     })
 })
 exports.login=err(async(req,res,next)=>{
