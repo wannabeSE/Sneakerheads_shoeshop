@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 // import 'package:shared_preferences/shared_preferences.dart';
 class CustomerSignUp extends StatefulWidget {
@@ -23,10 +24,9 @@ RegExp regExp =RegExp(p);
 String temp='';
 bool observeText=true;
 class _CustomerSignUpState extends State<CustomerSignUp> {
-  void signUp(String fname, String lname, String email, String password)async{
-    
-     
-      var res= await http.post(Uri.parse('http://10.0.2.2:8080/api/signup'),
+  Future signUp(String fname, String lname, String email, String password)async{
+    if(_formkey2.currentState!.validate()){
+      await http.post(Uri.parse('http://10.0.2.2:8080/api/signup'),
       headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -39,9 +39,12 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
       )
     
       );
+    }
+     
+      
       
      
-      print(res.body);
+      
       
     
   }
@@ -204,10 +207,9 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
                       onPressed: ()async {
                         if(firstnameController.text.isNotEmpty && lastnameController.text.isNotEmpty && emailController.text.isNotEmpty && passwordController.text.isNotEmpty)
                         {
-                          // validation(emailController.text,passwordController.text);
+                          
                           signUp(firstnameController.text, lastnameController.text, emailController.text, passwordController.text);
-                        }else{
-                          print('empty');
+                          Fluttertoast.showToast(msg: 'Account Created Succesfully');
                         }
                         
                       },

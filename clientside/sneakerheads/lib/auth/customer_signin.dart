@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 class CustomerSignIn extends StatefulWidget {
   const CustomerSignIn({ Key? key }) : super(key: key);
@@ -14,6 +15,7 @@ String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\
 bool observeText=true;
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
+bool loading= false;
 RegExp regExp = RegExp(p);
 
 class _CustomerSignInState extends State<CustomerSignIn> {
@@ -31,7 +33,24 @@ class _CustomerSignInState extends State<CustomerSignIn> {
     )
     );
     
-    print(res.body);
+    if(res.statusCode==400){
+      Fluttertoast.showToast(msg: 'Please enter your email and password');
+    }else if(res.statusCode==401){
+      Fluttertoast.showToast(msg: 'Wrong email or password');
+    }else if(res.statusCode==402){
+      Fluttertoast.showToast(msg: 'Invalid password');
+    }else{
+      showDialog(context: context, builder:(context){
+        return const Center(child: CircularProgressIndicator()) ;
+      }
+      );
+      
+    }
+    Future.delayed(const Duration(seconds: 2),(){
+      Navigator.of(context).pop();
+      Navigator.pushNamed(context, '/customer_signup');
+    });
+    
     }
   }
   
@@ -114,7 +133,7 @@ class _CustomerSignInState extends State<CustomerSignIn> {
                   ElevatedButton(
                       onPressed: ()async {
                         if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty){
-                        // validation(emailController.text, passwordController.text);
+                        
                           login(emailController.text,passwordController.text);
                         }
                       },
@@ -133,6 +152,7 @@ class _CustomerSignInState extends State<CustomerSignIn> {
           ],      
               ),
         ),
+        
     );
   }
 }
