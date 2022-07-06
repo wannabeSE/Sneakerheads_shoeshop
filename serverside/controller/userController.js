@@ -33,10 +33,5 @@ exports.login=err(async(req,res,next)=>{
     }else{
         return res.status(200).json({message:"Logged in succesfully"})
     }
-    const token= user.getJwtToken()
-    res.status(201).json({
-        success:true,
-        user,
-        token,
-    })
+    
 })
