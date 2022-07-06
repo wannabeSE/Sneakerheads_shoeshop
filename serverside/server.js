@@ -9,7 +9,7 @@ const User=require('./models/user')
 
 env.config()
 mongoose.connect(
-    'mongodb+srv://samir666:Takashi69@cluster0.7ml6ely.mongodb.net/?retryWrites=true&w=majority',
+    `mongodb+srv://${process.env.mongo_user}:${process.env.mongo_pass}@cluster0.7ml6ely.mongodb.net/?retryWrites=true&w=majority`,
     {
         useNewUrlParser:true,
         useUnifiedTopology:true,

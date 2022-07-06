@@ -26,7 +26,7 @@ bool observeText=true;
 class _CustomerSignUpState extends State<CustomerSignUp> {
   Future signUp(String fname, String lname, String email, String password)async{
     if(_formkey2.currentState!.validate()){
-      await http.post(Uri.parse('http://10.0.2.2:8080/api/signup'),
+      var res=await http.post(Uri.parse('http://10.0.2.2:8080/api/signup'),
       headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -39,13 +39,10 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
       )
     
       );
+      if(res.statusCode==201){
+        Fluttertoast.showToast(msg:'Account Created Succesfully');
+      }
     }
-     
-      
-      
-     
-      
-      
     
   }
   @override
@@ -209,7 +206,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> {
                         {
                           
                           signUp(firstnameController.text, lastnameController.text, emailController.text, passwordController.text);
-                          Fluttertoast.showToast(msg: 'Account Created Succesfully');
+                          
                         }
                         
                       },
