@@ -9,21 +9,21 @@ function subCategoryCreate(categories, parentId=null){
     let subCategory
     if(parentId==null){
         subCategory=categories.filter(ct=>ct.parentId==undefined)
-        console.log('ouput if',subCategory)
+        
     }else{
         subCategory=categories.filter(ct=>ct.parentId==parentId)
-        console.log('out else',subCategory)
+        
     }
-    console.log('entering loop')
+    
     for (let cat of subCategory){
-        console.log('this is cat',cat)
+        
         categoryList.push({
             _id:cat._id,
             name:cat.name,
             slug:cat.slug,
             children:subCategoryCreate(categories,cat._id)
         })
-        console.log('loop output',categoryList)
+        
     }
     return categoryList
 }

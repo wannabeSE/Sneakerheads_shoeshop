@@ -11,21 +11,20 @@ class CustomerSignIn extends StatefulWidget {
   State<CustomerSignIn> createState() => _CustomerSignInState();
 }
 final GlobalKey <FormState> _formkey= GlobalKey<FormState>();
-//final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 bool observeText=true;
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 bool isloading= false;
 int selected=0;
-String usr='admin';
 RegExp regExp = RegExp(p);
 
 class _CustomerSignInState extends State<CustomerSignIn> {
   void login(String email, String password) async{
     final FormState? _form = _formkey.currentState;
     if(_form!.validate()){
-    var res= await http.post(Uri.parse('http://10.0.2.2:8080/api/admin/signin'),
+    var res= await http.post(Uri.parse('http://10.0.2.2:8080/api/signin'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
