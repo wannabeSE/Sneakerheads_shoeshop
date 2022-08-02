@@ -1,11 +1,10 @@
 const express=require('express')
-const { addProd, getProduct } = require('../controller/prodController')
+const { addProd, getProducts } = require('../controller/prodController')
 const router=express.Router()
 const multer =require('multer')
 
 const shortid= require('shortid')
 const path = require('path')
-const { generate } = require('shortid')
  
 const storage=multer.diskStorage({
     destination:function(req,res,cb){
@@ -21,7 +20,7 @@ const upload=multer({storage})
 
 
 router.route('/product/create').post(upload.array('pics'),addProd)
-router.route('/product/getproduct').get(getProduct)
+router.route('/product/getproduct').get(getProducts)
 
 
 module.exports=router

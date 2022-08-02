@@ -12,34 +12,58 @@ class ProductView extends StatefulWidget {
 }
 
 class _ProductViewState extends State<ProductView> {
-  // List <MainCatList>? cats;
-  // List <Product>? prod;
-  List? prod;
-  getCategory()async{
-    String url='http://10.0.2.2:8080/api/product/getproduct';
-    var res= await http.get(Uri.parse(url));
-    if(res.statusCode==201){
-      var data= jsonDecode(res.body);
-      print(data.runtimeType);
-      // print(data[1]['name']);
-      // productFromJson(data);
-    }
-    // print(data);
-    // print('this the last feedback is ${data[1]['name']}');
+
+  List sneakers=[];
+  List category=[];
+  void getCategory()async{
+    String url='http://10.0.2.2:8080/api/category/getcategory';
     
-    // List<Category> cat=[];
-  //  setState(() {
-  //    for(int i=0;i<data.length;i++){
-  //     cat.add({
-  //       'name':data[i]['name']
-  //     });
-  //    }
-  //  });
-    // return cat;
+    try{
+      var res= await http.get(Uri.parse(url));
+      var values=jsonDecode(res.body);
+
+      var data=values['mainCatList'];
+      
+      setState(() {
+      for (int i=0;i<data.length;i++){
+        category.add({
+          'name':data[i]['name'],
+        });
+      }
+      });
+    }catch(e){
+      Fluttertoast.showToast(msg: 'Something went wrong');
+    }
+   
+  }
+  void getProduct()async{
+    String url = 'http://10.0.2.2:8080/api/product/getproduct';
+    
+    try{
+      var res= await http.get(Uri.parse(url));
+      var sValues=jsonDecode(res.body);
+
+      var sData=sValues['products'];
+      print(sData);
+      setState(() {
+      for (int i=0;i<sData.length;i++){
+        sneakers.add({
+          'name':sData[i]['name'],
+          'price':sData[i]['price'],
+          'image':sData[i]['pics'][0]
+        });
+      }
+      });
+    }catch(e){
+      Fluttertoast.showToast(msg: 'Something went wrong');
+    }
+  // print(sneakers);
+  // print(sneakers[1]['image']['img']);
   }
   @override
   void initState(){
     getCategory();
+    getProduct();
     super.initState();
   }
   @override
@@ -62,15 +86,10 @@ class _ProductViewState extends State<ProductView> {
                         children: [
                           TextSpan(text: "Find Your\n",style: TextStyle(fontSize: 30,fontFamily: 'Montserrat',)),
                           TextSpan(text:"BEST PAIR",style: TextStyle(fontSize: 40,fontFamily: 'Montserrat',fontWeight: FontWeight.bold,color: Colors.greenAccent) )
-         
                         ]
-                       
-                        
                       )
                       ),
-                     
                   ],
-                
                 ),
               ),
              
@@ -98,14 +117,55 @@ class _ProductViewState extends State<ProductView> {
                 height: 30,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: prod!.length,
-                  itemBuilder: ((context, index) => const Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('hello',style: TextStyle(fontSize: 18, fontFamily: 'Montserrat',fontWeight: FontWeight.bold),),
+                  itemCount: category.length,
+                  itemBuilder: (
+                    (context, index) => Padding(
+                    padding:const  EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('${category[index]['name']}',style: const TextStyle(fontSize: 18, fontFamily: 'Montserrat',fontWeight: FontWeight.normal,color: Colors.white),),
                   )
                   )
                   ),
-              )
+              ),
+          Expanded(
+            child: GridView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: sneakers.length,
+              gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 5,
+                crossAxisSpacing: 5,
+                childAspectRatio: 0.75,
+            ), 
+            itemBuilder: (context,index){
+              return Card(
+                margin:const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                shadowColor: Colors.deepOrangeAccent,
+                elevation: 10,
+                child: Column(
+                  children: [
+                     AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          color:Colors.white,
+                          
+                          child:Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Image.network('http://10.0.2.2:8080//SneakerHead//serverside//uploads//${sneakers[index]['image']['img']}'),
+                          )
+                          )
+                        ),
+                         Text('${sneakers[index]['name']}'),
+                         Padding(
+                           padding: const EdgeInsets.all(5.0),
+                           child: Text('${sneakers[index]['price']} Tk'),
+                         ),
+                  ],
+                ),
+              );
+            }))
         ],
       ) 
       ),

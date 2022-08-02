@@ -25,21 +25,29 @@ exports.addProd=(req,res, next)=>{
             return res.status(400).json({error})
         }
         if(product){
-            res.status(201).json({product})
+            res.status(201).json({product,files: req.files})
         }
     }))
     
 }
 
-exports.getProduct=(req, res ,next)=>{
-    Product.find({}).
-    exec((error, product)=>{
-        if(error){
-            return res.status(400).json({error})
-        }
-        if(product){
+// exports.getProducts=(req, res ,next)=>{
+//     Product.find({}).
+//     exec((error, product)=>{
+//         if(error){
+//             return res.status(400).json({error})
+//         }
+//         if(product){
             
-            return res.status(201).json({product})
-        }
-    })
-}
+//             return res.status(201).json({product})
+//         }
+//     })
+// }
+exports.getProducts = async (req, res) => {
+    const products = await Product.find({})
+      .select("_id name price quantity slug description pics category")
+      .populate({ path: "category", select: "_id name" })
+      .exec();
+  
+    res.status(200).json({ products });
+  };
