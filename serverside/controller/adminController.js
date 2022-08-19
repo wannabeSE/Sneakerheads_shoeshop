@@ -26,16 +26,17 @@ exports.adminLogin=err(async(req,res,next)=>{
     }
     const user= await User.findOne({email}).select('+password')
     // const token =user.getJwtToken()
+    const {role}=user
     if(!user){
         return res.status(401).json({
             message:'Wrong email or password'
         })
     }
     const passCheck=await user.comparePassword(password)
-    if(!passCheck && user.role=='admin'){
+    if(!passCheck ){
         return res.status(402).json({message:'Invalid password'})        
-    }else{
-        return res.status(200).json({message:"Logged in as admin succesfully"})
+    }else if(user.role=='admin'){
+        return res.status(200).json({user:{role},message:"Logged in as admin succesfully"})
       
     }
     

@@ -8,7 +8,7 @@ const productSchema=new mongoose.Schema({
     },
     slug:{
         type:String,
-        require:true,
+        required:true,
         unique:true
     },
     price:{
@@ -28,10 +28,10 @@ const productSchema=new mongoose.Schema({
     offer:{
         type: Number,
     },
-    pics:[
-        {img:{type:String}},
-        
-    ],
+    pics:{
+        type:String,
+        required:true
+    },
     category:{
         type:mongoose.Schema.ObjectId, ref:'Category',
         required:true

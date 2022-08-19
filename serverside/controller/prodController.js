@@ -2,14 +2,14 @@ const Product=require('../models/product')
 const slugify= require('slugify')
 
 exports.addProd=(req,res, next)=>{
-    const {name, price,quantity, description,category}=req.body
+    const {name, price,quantity, description,pics,category}=req.body
 
-    let pics=[];
-    if(req.files.length>0){
-        pics=req.files.map(file=>{
-            return {img:file.filename}
-        })
-    }
+    // let pics=[];
+    // if(req.files.length>0){
+    //     pics=req.files.map(file=>{
+    //         return {img:'http://localhost:8080'+'/images/'+file.filename}
+    //     })
+    // }
 
     const product=new Product({
         name:name,
@@ -19,30 +19,19 @@ exports.addProd=(req,res, next)=>{
         description,
         pics,
         category
-    })
+    });
     product.save(((error, product)=>{
         if(error){
             return res.status(400).json({error})
         }
         if(product){
-            res.status(201).json({product,files: req.files})
+            res.status(201).json({product})
         }
     }))
     
 }
 
-// exports.getProducts=(req, res ,next)=>{
-//     Product.find({}).
-//     exec((error, product)=>{
-//         if(error){
-//             return res.status(400).json({error})
-//         }
-//         if(product){
-            
-//             return res.status(201).json({product})
-//         }
-//     })
-// }
+
 exports.getProducts = async (req, res) => {
     const products = await Product.find({})
       .select("_id name price quantity slug description pics category")

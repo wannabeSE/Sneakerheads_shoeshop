@@ -3,9 +3,12 @@ const app= express()
 const env =require('dotenv')
 const mongoose=require('mongoose')
 const port=8080
+const path = require('path')
 const userRoutes=require('./routes/userRouter')
 const catrouter=require('./routes/catrouter')
 const prodrouter=require('./routes/prodrouter')
+const cartRouter=require('./routes/cartRouter')
+
 env.config()
 mongoose.connect(
     `mongodb+srv://${process.env.mongo_user}:${process.env.mongo_pass}@cluster0.7ml6ely.mongodb.net/?retryWrites=true&w=majority`,
@@ -21,9 +24,11 @@ mongoose.connect(
     });
 
 app.use(express.json())
+// app.use('/images',express.static(path.join(__dirname,'uploads')))
 app.use('/api',userRoutes)
 app.use('/api',catrouter)
-app.use('/api/',prodrouter)
+app.use('/api',prodrouter)
+app.use('/api',cartRouter)
 
 app.listen(port,()=>{     
     console.log('listening to this port',port )

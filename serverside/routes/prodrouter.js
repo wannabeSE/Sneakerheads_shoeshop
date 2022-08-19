@@ -19,7 +19,7 @@ const upload=multer({storage})
 
 
 
-router.route('/product/create').post(upload.array('pics'),addProd)
+router.route('/product/create').post(addProd)
 router.route('/product/getproduct').get(getProducts)
 
 
