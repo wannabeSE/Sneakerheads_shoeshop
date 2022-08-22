@@ -10,8 +10,9 @@ const prodrouter=require('./routes/prodrouter')
 const cartRouter=require('./routes/cartRouter')
 
 env.config()
+
 mongoose.connect(
-    `mongodb+srv://${process.env.mongo_user}:${process.env.mongo_pass}@cluster0.7ml6ely.mongodb.net/?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.7ml6ely.mongodb.net/?retryWrites=true&w=majority`,
     {
         useNewUrlParser:true,
         useUnifiedTopology:true,
@@ -22,7 +23,7 @@ mongoose.connect(
     }).catch((error)=>{
         console.log(error)
     });
-
+    
 app.use(express.json())
 // app.use('/images',express.static(path.join(__dirname,'uploads')))
 app.use('/api',userRoutes)

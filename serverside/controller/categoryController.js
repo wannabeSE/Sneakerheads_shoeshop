@@ -3,36 +3,36 @@ const slugify= require('slugify')
 const category = require('../models/category')
 const { json } = require('body-parser')
 
-function subCategoryCreate(categories, parentId=null){
+// function subCategoryCreate(categories, parentId=null){
     
-    const categoryList=[]
-    let subCategory
-    if(parentId==null){
-        subCategory=categories.filter(ct=>ct.parentId==undefined)
+//     const categoryList=[]
+//     let subCategory
+//     if(parentId==null){
+//         subCategory=categories.filter(ct=>ct.parentId==undefined)
         
-    }else{
-        subCategory=categories.filter(ct=>ct.parentId==parentId)
+//     }else{
+//         subCategory=categories.filter(ct=>ct.parentId==parentId)
         
-    }
+//     }
     
-    for (let cat of subCategory){
+//     for (let cat of subCategory){
         
-        categoryList.push({
-            _id:cat._id,
-            name:cat.name,
-            slug:cat.slug,
-            children:subCategoryCreate(categories,cat._id)
-        })
+//         categoryList.push({
+//             _id:cat._id,
+//             name:cat.name,
+//             // slug:cat.slug,
+//             children:subCategoryCreate(categories,cat._id)
+//         })
         
-    }
-    return categoryList
-}
+//     }
+//     return categoryList
+// }
 
 
 exports.createCategory=(req,res,next)=>{
     const categoryObj={
         name:req.body.name,
-        slug:slugify(req.body.name)
+        // slug:slugify(req.body.name)
 
     }
     if(req.body.parentId){
@@ -57,8 +57,8 @@ exports.getCategory=(req, res ,next)=>{
             return res.status(400).json({error})
         }
         if(categories){
-            const mainCatList= subCategoryCreate(categories)
-            return res.status(201).json({mainCatList})
+            // const mainCatList= subCategoryCreate(categories)
+            return res.status(201).json({categories}) 
         }
     })
 }

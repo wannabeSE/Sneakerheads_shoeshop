@@ -4,13 +4,9 @@ const categorySchema=new mongoose.Schema({
     name:{
         type:String,
         require:true,
-        trim:true
+        unique:true, 
     },
-    slug:{
-        type:String,
-        require:true,
-        unique:true
-    },
+   
     parentId:{
         type:String,
     }
