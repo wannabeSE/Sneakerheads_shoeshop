@@ -1,64 +1,41 @@
 const Cart=require('../models/cart')
-const { insertMany } = require('../models/user')
+const cartService= require('../services/cartService')
 
-exports.addtocart=(req,res,next)=>{
-    Cart.findOne({user:req.user._id})
-    .exec((error,cart)=>{
+exports.addtocart=(req, res, next)=>{
+    var model ={
+        userId:req.user.userId,
+        products:req.body.products
+    }
+    cartService.addCart(model,(error, results)=>{
         if(error){
-            return res.status(400).json({ error })
-        } 
-        if(cart){
-            const prd=req.body.cartItems.product
-            const item=cart.cartItems.find(crt => crt.product == prd)
-
-            if(item){
-                Cart.findOneAndUpdate({user:req.user._id, 'cartItems.product':prd},{
-                    '$set':{
-                        'cartItems.$':{
-                            ...req.body.cartItems,
-                            'quantity':item.quantity + parseInt(req.body.cartItems.quantity)
-                        }
-                    }
-                }).exec((error,cart)=>{
-                    if(error){
-                        return res.status(400).json({error})
-                    }
-                    if(cart){
-                        return res.status(200).json({cart:cart})
-                    }
-                })
-            }else{
-                Cart.findOneAndUpdate({user:req.user._id},{
-                    '$push':{
-                        'cartItems':req.body.cartItems
-                    }
-                }).exec((error,cart)=>{
-                    if(error){
-                        return res.status(400).json({error})
-                    }
-                    if(cart){
-                        return res.status(200).json({cart:cart})
-                    }
-                })
-            }
-            
+            return next(error)
         }
-        else{
-            const cart= new Cart({
-                user:req.user._id,
-                cartItems:[req.body.cartItems],
-        
-            })
-            cart.save((error,cart)=>{
-                if(error){
-                    return res.status(400).json({ error })
-                } 
-                if(cart){
-                    return res.status(201).json({cart})
-                }
-               
-            })
-        }
+        return res.status(201).send({message:'success',data:results})
     })
-    
+}
+
+exports.fetchCart=(req,res, next)=>{
+    cartService.getCart({userId:req.user.userId}, (error, results)=>{
+        if(error){
+            return next(error)
+        }
+        return res.status(201).send({
+            message:'success',
+            data:results
+        })
+    })
+}
+
+exports.deleteItem=(req, res, next)=>{
+    var model ={
+        userId:req.user.userId,
+        productId:req.body.productId,
+        quantity:req.body.quantity
+    }
+    cartService.removeItem(model,(error, results)=>{
+        if(error){
+            return next(error)
+        }
+        return res.status(201).send({message:'success',data:results})
+    })
 }
