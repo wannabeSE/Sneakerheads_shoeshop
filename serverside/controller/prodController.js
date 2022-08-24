@@ -24,7 +24,8 @@ exports.addProd=(req,res,next)=>{
 
 exports.findAll=(req,res,next)=>{
     var model={
-        productId:req.params.id
+        name:req.query.name,
+        sort:req.query.sort
     }
     prodService.search(model,(error,results)=>{
         if(error){

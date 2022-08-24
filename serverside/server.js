@@ -8,7 +8,7 @@ const userRoutes=require('./routes/userRouter')
 const catrouter=require('./routes/catrouter')
 const prodrouter=require('./routes/prodrouter')
 const cartRouter=require('./routes/cartRouter')
-
+const orderRouter=require('./routes/orderRoutes')
 env.config()
 
 mongoose.connect(
@@ -30,7 +30,7 @@ app.use('/api',userRoutes)
 app.use('/api',catrouter)
 app.use('/api',prodrouter)
 app.use('/api',cartRouter)
-
+app.use('/api',orderRouter)
 app.listen(port,()=>{     
     console.log('listening to this port',port )
  })

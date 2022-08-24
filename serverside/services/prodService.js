@@ -4,9 +4,7 @@ async function createProduct(params,callback){
     if(!params.name){
         return callback({message:'enter product name'})
     }
-    // if(!params.category){
-    //     return callback({message:'enter product category'})
-    // }
+
     const productModel= new product(params)
     productModel.save()
     .then((response)=>{
@@ -31,7 +29,7 @@ async function search(params, callback){
             $regex:new RegExp['price'], $options: 'i'
         }
     }
-    product.find(condition,'name price')
+    product.find(condition,'name price').sort(params.sort)
     .then((response)=>{
         return callback(null, response)
     })

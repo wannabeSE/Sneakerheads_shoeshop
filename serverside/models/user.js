@@ -33,6 +33,9 @@ const user= mongoose.model(
             enum:['user','admin'],
             default:'user',
         },
+        stripCustomerID:{
+            type:String
+        }
     },{
         toJSON:{
             transform:function(doc, ret){
